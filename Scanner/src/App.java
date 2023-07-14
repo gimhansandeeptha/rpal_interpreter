@@ -3,8 +3,7 @@ public class App {
         Scanner scanner = new Scanner("test.txt");
         Token nextToken = scanner.readNextToken();
         while(nextToken != null){
-            System.out.printf("%s : %s\n",nextToken.getToken(),nextToken.getTokenType().toString());
-            System.out.println("debug");
+            System.out.printf("%s : %s : %d\n",nextToken.getToken(),nextToken.getTokenType().toString(),nextToken.getTokenLine());
             nextToken = scanner.readNextToken();
         }
         
