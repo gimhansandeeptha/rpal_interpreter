@@ -1,0 +1,3 @@
+let F n = (n/2)*2 ne n -> 'Odd' | 'Even'
+in 
+Print(F 17)

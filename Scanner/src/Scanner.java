@@ -47,7 +47,7 @@ public class Scanner {
         return c;
     }
 
-    private Token buildToken(String c) throws IOException{
+    private Token buildToken(String c) throws IOException{  // let func A = 
         Token nextToken = null;
         if (RegEx.LetterRegex.matcher(c).matches()) nextToken = identifierToken(c);
         else if (RegEx.DigitRegex.matcher(c).matches()) nextToken = integerToken(c);
@@ -114,16 +114,20 @@ public class Scanner {
         Token string  = new Token();
         string.setTokenType(TokenType.STRING);
         string.setTokenLine(lineNumber);
-        StringBuilder stringBuilder = new StringBuilder(c);
+        StringBuilder stringBuilder = new StringBuilder("");
         String nextChar = readNextChar();
 
         while(RegEx.StringRegex.matcher(nextChar).matches()){
-            if (nextChar == "\'") break;
+            if (nextChar == "\'") {
+                break;
+            }
             stringBuilder.append(nextChar);
             nextChar = readNextChar();
         }
-        stringBuilder.append(nextChar);
+        // stringBuilder.append(nextChar);
         string.setToken(stringBuilder.toString());
+        nextChar = readNextChar();
+        extraChar= nextChar;
         return string;
     }
 
