@@ -1,3 +1,4 @@
+package Scanner;
 public class App {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner("test.txt");

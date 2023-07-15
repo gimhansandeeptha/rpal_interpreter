@@ -1,3 +1,5 @@
+package Scanner;
+
 public class Token {
     private TokenType tokenType;
     private String token;

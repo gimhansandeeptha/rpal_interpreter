@@ -8,12 +8,22 @@ public class ASTNode{
     private ASTNode sibling;
     private int sourceLine;
 
+    public ASTNode(){}
+
     public String getName(){
         return type.name();
     }
 
     public ASTNodeType getType(){
         return type;
+    }
+    
+    public void setType(ASTNodeType nodeType){
+        this.type = nodeType;
+    }
+
+    public ASTNode getChild(){
+        return child;
     }
 
     public void setChild(ASTNode node){
