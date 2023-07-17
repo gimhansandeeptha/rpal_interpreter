@@ -1,4 +1,3 @@
-package Scanner;
 import java.util.regex.Pattern;
 
 public class RegEx {

@@ -1,4 +1,3 @@
-package Ast;
 // import node copier from cse machine
 
 public class ASTNode{

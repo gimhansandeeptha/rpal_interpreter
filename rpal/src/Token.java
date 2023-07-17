@@ -1,5 +1,3 @@
-package Scanner;
-
 public class Token {
     private TokenType tokenType;
     private String token;
@@ -23,6 +21,4 @@ public class Token {
     public void setTokenLine(int tokenLine) {
         this.tokenLine = tokenLine;
     }
-    
-    
 }

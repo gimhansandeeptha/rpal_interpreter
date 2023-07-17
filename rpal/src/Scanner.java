@@ -1,15 +1,18 @@
-package Scanner;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Scanner {
     private BufferedReader buffer;
     private String extraChar;
     private int lineNumber;
+    private final ArrayList<String> keylist = new ArrayList<>(Arrays.asList("let","in","within","fn","where","aug","or","not","gr","ge","ls","le","eq","ne","true","false","nil","dummy","rec","and"));
 
     public Scanner(String inputFile) throws FileNotFoundException{
         buffer = new BufferedReader(new InputStreamReader(new FileInputStream(new File(inputFile))));
@@ -21,30 +24,42 @@ public class Scanner {
         Token nextToken = null;
         String nextChar;
         
-        if (extraChar==null){
-            nextChar = readNextChar();
+        if (extraChar!=null){ 
+            nextChar = extraChar;
+            extraChar = null;
         }
         else{
-            nextChar = extraChar;
+            nextChar = readNextChar();
         }
         if (nextChar != null){
             nextToken = buildToken(nextChar);
         }
 
         return nextToken;
+        
 
     }
 
     private String readNextChar() throws IOException{
         int character;
         String c = null;
-        if ((character = buffer.read()) != -1) {
+        // System.out.println("debug");
+        try {
+            character = buffer.read();
+            if ( character!= -1) {
+
             c = Character.toString((char) character);
             if (c.equals("\n")){lineNumber++ ;}
         }
         else{
+            // System.out.println("debug2");
             buffer.close();
         }
+            
+        } catch (Exception IOException ) {
+            // TODO: handle exception
+        }
+
         return c;
     }
 
@@ -75,6 +90,8 @@ public class Scanner {
         }
         extraChar=nextChar;
         identifier.setToken(stringBuilder.toString());
+
+        if (keylist.contains(identifier.getToken())) identifier.setTokenType(TokenType.KEYWORD);
 
         return identifier;
     }
@@ -125,7 +142,6 @@ public class Scanner {
             stringBuilder.append(nextChar);
             nextChar = readNextChar();
         }
-        // stringBuilder.append(nextChar);
         string.setToken(stringBuilder.toString());
         nextChar = readNextChar();
         extraChar= nextChar;
@@ -134,6 +150,11 @@ public class Scanner {
 
     private Token spaceToken(String c) throws IOException{
         Token space = new Token();
+
+        // char ch = c.charAt(0);
+        // int unicodeValue = Character.codePointAt(c, 0);
+        // System.out.println("'" + ch + "': " + unicodeValue);
+
         space.setTokenType(TokenType.DELETE);
         space.setTokenLine(lineNumber);
         StringBuilder stringBuilder = new StringBuilder(c);
@@ -142,6 +163,8 @@ public class Scanner {
         while(RegEx.SpacesRegex.matcher(nextChar).matches()){
             stringBuilder.append(nextChar);
             nextChar = readNextChar();
+            if (nextChar == null){break;}
+
         }
         extraChar = nextChar;
         space.setToken(stringBuilder.toString());
@@ -175,15 +198,11 @@ public class Scanner {
             else if (nextChar.equals(")")) punction.setTokenType(TokenType.R_PAREN);
             else if (nextChar.equals(";")) punction.setTokenType(TokenType.SEMICOLON);
             else if (nextChar.equals(",")) punction.setTokenType(TokenType.COMMA);
-            stringBuilder.append(nextChar);
             nextChar = readNextChar();
+            
         }
         extraChar = nextChar;
         punction.setToken(stringBuilder.toString());
         return punction;
     }
-
-
 }
-
-

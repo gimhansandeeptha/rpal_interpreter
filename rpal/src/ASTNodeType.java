@@ -1,4 +1,3 @@
-package Ast;
 
 public enum ASTNodeType {
 

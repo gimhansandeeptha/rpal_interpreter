@@ -1,5 +1,3 @@
-package Scanner;
-
 public enum TokenType {
     IDENTIFIER, 
     INTEGER , 
@@ -10,6 +8,6 @@ public enum TokenType {
     R_PAREN , 
     SEMICOLON , 
     COMMA , 
-    KEYWORDS , 
-    RESERVED;
+    KEYWORD  
+    ;
 }
