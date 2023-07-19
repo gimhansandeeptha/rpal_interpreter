@@ -69,7 +69,7 @@ public class AST {
             equal.setSibling(e);
             node.setType(ASTNodeType.GAMMA);
             equal.setType(ASTNodeType.LAMBDA);
-            break;
+        break;
             
         case WHERE:
             equal = node.getChild().getSibling();
@@ -78,12 +78,13 @@ public class AST {
             node.setChild(equal);
             node.setType(ASTNodeType.LET);
             standardize(node);
-            break;
+        break;
 
         case FCNFORM:
             ASTNode childSibling = node.getChild().getSibling();
             node.getChild().setSibling(lambdaChain(childSibling));
             node.setType(ASTNodeType.EQUAL);
+        break;
         
         case AT:
             ASTNode e1 = node.getChild();
@@ -98,7 +99,7 @@ public class AST {
             node.setChild(gamma);
             node.setChild(gamma);
             node.setType(ASTNodeType.GAMMA);
-            break;
+        break;
 
         case WITHIN:
             ASTNode x1 = node.getChild().getChild();
@@ -116,13 +117,96 @@ public class AST {
             gamma.setChild(lambda);
             x2.setSibling(gamma);
             node.setChild(x2);
+        break;
+
+        case LAMBDA:
+            childSibling = node.getChild().getSibling();
+            node.getChild().setSibling(lambdaChain(childSibling));
+        break;
+
+        case AND:
+            ASTNode comma = new ASTNode();
+            ASTNode tau = new ASTNode();
+            comma.setType(ASTNodeType.COMMA);
+            tau.setType(ASTNodeType.TAU);
+            ASTNode child = node.getChild();
+
+            while (child != null){
+                populateCommaTau(child, comma, tau);
+                child = child.getSibling();
+            }
+
+            node.setType(ASTNodeType.EQUAL);
+            comma.setSibling(tau);
+            node.setChild(comma);
+        break;
         
-        
+        case REC:
+            child = node.getChild();
+            ASTNode x = child.getChild();
+            lambda = new ASTNode();
+            gamma = new ASTNode();
+            ASTNode y = new ASTNode();
+            lambda.setType(ASTNodeType.LAMBDA);
+            gamma.setType(ASTNodeType.GAMMA);
+            y.setType(ASTNodeType.Y);
+            node.setType(ASTNodeType.EQUAL);
+            lambda.setChild(x);
+            y.setSibling(lambda);
+            gamma.setChild(y);
+            ASTNode childX = new ASTNode();
+            childX.setType(x.getType());
+            childX.setValue(x.getValue());
+            childX.setChild(x.getChild());
+            childX.setSibling(gamma);
+            node.setChild(childX);
+        break;
 
         default:
             break;
+        }
     }
+
+    private void populateCommaTau(ASTNode equal, ASTNode comma, ASTNode tau){
+        if (equal.getType() != ASTNodeType.EQUAL){
+            throw new StandardizeException("Child is not EQUAL node");
+        }
+        ASTNode x= equal.getChild();
+        ASTNode e = x.getSibling();
+        setChild(comma, x);
+        setChild(tau, e);
     }
+
+    private ASTNode lambdaChain(ASTNode node){
+        if (node.getSibling() == null){
+            return node;
+        }
+        ASTNode lambda = new ASTNode();
+        lambda.setType(ASTNodeType.LAMBDA);
+        lambda.setChild(node);
+
+        if (node.getSibling().getSibling() != null){
+            node.setSibling(lambdaChain(node.getSibling()));
+        }
+        return lambda;
+    }
+
+    private void setChild(ASTNode parent, ASTNode child){
+        if (parent.getChild() == null){
+            parent.setChild(child);
+        }
+        else{
+            ASTNode sibling = parent.getChild();
+
+            while (sibling.getSibling() != null){
+                sibling = sibling.getSibling();
+            }
+            sibling.setSibling(child);
+        }
+        child.setSibling(null);
+    }
+
+    
 
     
 }
