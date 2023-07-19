@@ -6,11 +6,12 @@ public class Parser {
     private Token currentToken;
     Stack<ASTNode> stack;
 
-    public AST buildAST() throws IOException{
+    public ASTNode buildAST() throws IOException{
         s = new Scanner("D:\\Gimhan Sandeeptha\\Gimhan\\Semester 04\\Programming Languages\\PL Group Project - 12\\rpal_interpreter\\rpal\\test.txt");
         stack = new Stack<>();
         startParse();
-        return new AST(stack.pop());
+        return stack.pop();
+        // return new AST(stack.pop());
 
     }
 
@@ -84,7 +85,7 @@ public class Parser {
             }
             node.setChild(new_child);
             node.setSourceLine(new_child.getSourceLine());
-            n_children -= n_children;            
+            n_children = n_children-1;            
         }
         stack.push(node);
     }
@@ -159,7 +160,7 @@ public class Parser {
         while(isCurrentToken(TokenType.COMMA, ",")){
             readNT();
             procTA();
-            treesToPop += treesToPop;
+            treesToPop = treesToPop+1;
         }
         if(treesToPop > 0){ 
             buildASTNode(ASTNodeType.TAU,treesToPop+1);
@@ -535,7 +536,7 @@ public class Parser {
                     System.out.println("Parse Exception13");
                 }
                 readNT();
-                treesToPop+=treesToPop;   
+                treesToPop=treesToPop+1;   
             }
             if(treesToPop>0){
             buildASTNode(ASTNodeType.COMMA,treesToPop+1);
@@ -543,15 +544,21 @@ public class Parser {
         }
     }
 
-    public void printAST(){
-        printAST(stack.pop());
-    }
+    // public void printAST(){
+    //     printAST(stack.pop());
+    // }
 
-    private void printAST(ASTNode ast){
+    public void printAST(ASTNode ast){
         // ASTNode ast  = stack.pop();
-        System.out.println(ast.getName());
-        if (ast.getChild() != null ) printAST(ast.getChild());
-        if (ast.getSibling() != null ) printAST(ast.getSibling());
+        if (ast.getValue() == null) System.out.println(ast.getName());
+        else System.out.println(ast.getValue());
+        
+        if (ast.getChild() != null ) {
+            printAST(ast.getChild());
+        }
+        if (ast.getSibling() != null ) {
+            printAST(ast.getSibling());
+        }
 
     }
 }
