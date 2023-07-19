@@ -99,13 +99,10 @@ public class Parser {
 
 
 
-
     private void procE() throws IOException{
         if (isCurrentToken(TokenType.KEYWORD, "let")){// E => let D in E => let
             readNT();
-            System.out.println(currentToken.getToken());
             procD();
-            System.out.println(currentToken.getToken());
 
             if (!isCurrentToken(TokenType.KEYWORD, "in")){
                 // throw new ParseException("E: expected 'in'");
@@ -159,7 +156,7 @@ public class Parser {
     private void procT() throws IOException{
         procTA();
         int treesToPop = 0;
-        while(isCurrentToken(TokenType.OPERATOR, ",")){
+        while(isCurrentToken(TokenType.COMMA, ",")){
             readNT();
             procTA();
             treesToPop += treesToPop;
@@ -345,6 +342,7 @@ public class Parser {
 
 
     private void procAP() throws IOException{
+        procR();
         while(isCurrentToken(TokenType.OPERATOR,"@")){
             readNT();
             if(!isCurrentTokenType(TokenType.IDENTIFIER)){
@@ -401,9 +399,7 @@ public class Parser {
 
     
     private void procD() throws IOException{
-        System.out.println(currentToken.getToken());
         procDA();
-        System.out.println(currentToken.getToken());
         if (isCurrentToken(TokenType.KEYWORD,"within" )){
             readNT();
             procD();
@@ -459,8 +455,6 @@ public class Parser {
         else if (isCurrentTokenType(TokenType.IDENTIFIER)){
             
             readNT();
-            System.out.println("--------------------------------");
-            System.out.println(currentToken.getToken());
             if (isCurrentToken(TokenType.OPERATOR, ",")){
                 readNT();
                 procVL();
@@ -476,7 +470,6 @@ public class Parser {
             }
             else{
                 if (isCurrentToken(TokenType.OPERATOR, "=")){
-                    System.out.println(currentToken.getToken());
                     readNT();
                     procE();
                     buildASTNode(ASTNodeType.EQ,2);
@@ -496,9 +489,7 @@ public class Parser {
                         // throw new ParseException("DB: expexted =");
                         System.out.println("Parse Exception10");
                     }
-                    System.out.println(currentToken.getToken());
                     readNT();
-                    System.out.println(currentToken.getToken());
                     procE();
                     buildASTNode(ASTNodeType.FCNFORM, treesToPop+2);
                 }
@@ -537,7 +528,7 @@ public class Parser {
         else{
             readNT();
             int treesToPop = 0;
-            while( isCurrentToken(TokenType.OPERATOR, ",")){
+            while( isCurrentToken(TokenType.COMMA, ",")){
                 readNT();
                 if(!isCurrentTokenType(TokenType.IDENTIFIER)){
                     // throw new ParseException("VL: Identifier Expected");
