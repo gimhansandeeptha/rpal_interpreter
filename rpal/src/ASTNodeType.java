@@ -14,7 +14,7 @@ public enum ASTNodeType {
     OR("or"),
     BOOLAND("&"),
     NOT("not"),
-    GR(gr),
+    GR("gr"),
     GE("ge"),
     LS("ls"),
     LE("le"),

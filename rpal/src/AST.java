@@ -70,7 +70,55 @@ public class AST {
             node.setType(ASTNodeType.GAMMA);
             equal.setType(ASTNodeType.LAMBDA);
             break;
-    
+            
+        case WHERE:
+            equal = node.getChild().getSibling();
+            node.getChild().setSibling(null);
+            equal.setSibling(node.getChild());
+            node.setChild(equal);
+            node.setType(ASTNodeType.LET);
+            standardize(node);
+            break;
+
+        case FCNFORM:
+            ASTNode childSibling = node.getChild().getSibling();
+            node.getChild().setSibling(lambdaChain(childSibling));
+            node.setType(ASTNodeType.EQUAL);
+        
+        case AT:
+            ASTNode e1 = node.getChild();
+            ASTNode n = e1.getSibling();
+            ASTNode e2 = n.getSibling();
+            ASTNode gamma = new ASTNode();
+            gamma.setType(ASTNodeType.GAMMA);
+            gamma.setChild(n);
+            e1.setSibling(null);
+            n.setSibling(e1);
+            gamma.setSibling(e2);
+            node.setChild(gamma);
+            node.setChild(gamma);
+            node.setType(ASTNodeType.GAMMA);
+            break;
+
+        case WITHIN:
+            ASTNode x1 = node.getChild().getChild();
+            e1 = x1.getSibling();
+            ASTNode x2 = node.getChild().getSibling().getChild();
+            e2 = x2.getSibling();
+            gamma = new ASTNode();
+            gamma.setType(ASTNodeType.GAMMA);
+            ASTNode lambda = new ASTNode();
+            lambda.setType(ASTNodeType.LAMBDA);
+            node.setType(ASTNodeType.EQUAL);
+            x1.setSibling(e2);
+            lambda.setChild(x1);
+            lambda.setSibling(e1);
+            gamma.setChild(lambda);
+            x2.setSibling(gamma);
+            node.setChild(x2);
+        
+        
+
         default:
             break;
     }
