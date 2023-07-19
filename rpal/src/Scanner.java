@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,7 +42,6 @@ public class Scanner {
     private String readNextChar() throws IOException{
         int character;
         String c = null;
-        // System.out.println("debug");
         try {
             character = buffer.read();
             if ( character!= -1) {
@@ -52,24 +50,22 @@ public class Scanner {
             if (c.equals("\n")){lineNumber++ ;}
         }
         else{
-            // System.out.println("debug2");
             buffer.close();
         }
             
         } catch (Exception IOException ) {
-            // TODO: handle exception
         }
 
         return c;
     }
 
-    private Token buildToken(String c) throws IOException{  // let func A = 
+    private Token buildToken(String c) throws IOException{  
         Token nextToken = null;
         if (RegEx.LetterRegex.matcher(c).matches()) nextToken = identifierToken(c);
         else if (RegEx.DigitRegex.matcher(c).matches()) nextToken = integerToken(c);
-        else if (RegEx.OperatorRegex.matcher(c).matches()) nextToken = operatorToken(c);
-        else if (RegEx.SpacesRegex.matcher(c).matches()) nextToken = spaceToken(c);
         else if (RegEx.PunctionRegex.matcher(c).matches()) nextToken = punctionToken(c);
+        else if (RegEx.OperatorRegex.matcher(c).matches()) nextToken = operatorToken(c);
+        else if (RegEx.SpacesRegex.matcher(c).matches()) nextToken = spaceToken(c);  
         else if (c.equals("\\")) nextToken = commentToken(c);
         else if (c.equals("\'")) nextToken = stringToken(c);
 
@@ -189,8 +185,9 @@ public class Scanner {
 
     private Token punctionToken(String c) throws IOException {
         Token punction = new Token();
+        punction.setTokenType(TokenType.PUNCTION);
         punction.setTokenLine(lineNumber);
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder(c);
         String nextChar = c;
 
         while(RegEx.PunctionRegex.matcher(nextChar).matches()){

@@ -8,6 +8,6 @@ public enum TokenType {
     R_PAREN , 
     SEMICOLON , 
     COMMA , 
-    KEYWORD  
-    ;
+    KEYWORD,
+    PUNCTION ;
 }

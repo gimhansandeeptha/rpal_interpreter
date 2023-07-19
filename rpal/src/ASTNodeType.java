@@ -1,4 +1,3 @@
-
 public enum ASTNodeType {
 
     IDENTIFIER("<ID:%s>"),

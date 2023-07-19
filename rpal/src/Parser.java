@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.Stack;
 
@@ -8,6 +7,8 @@ public class Parser {
     Stack<ASTNode> stack;
 
     public AST buildAST() throws IOException{
+        s = new Scanner("D:\\Gimhan Sandeeptha\\Gimhan\\Semester 04\\Programming Languages\\PL Group Project - 12\\rpal_interpreter\\rpal\\test.txt");
+        stack = new Stack<>();
         startParse();
         return new AST(stack.pop());
 
@@ -55,7 +56,6 @@ public class Parser {
         if (currentToken.getTokenType() != type || !currentToken.getToken().equals(value)){
             return false;
         }
-
         return true;
     }
 
@@ -68,7 +68,6 @@ public class Parser {
         if (currentToken.getTokenType() == type){
             return true;
         }
-
         return false;
     }
 
@@ -100,7 +99,6 @@ public class Parser {
 
 
 
-
     private void procE() throws IOException{
         if (isCurrentToken(TokenType.KEYWORD, "let")){// E => let D in E => let
             readNT();
@@ -108,6 +106,7 @@ public class Parser {
 
             if (!isCurrentToken(TokenType.KEYWORD, "in")){
                 // throw new ParseException("E: expected 'in'");
+                System.out.println("Parse Exception1");
             }
             readNT();
             procE();
@@ -126,10 +125,12 @@ public class Parser {
 
             if (treesToPop == 0){
                 //throw new ParseException("E: At least one 'Vb' expected");
+               System.out.println("Parse Exception2"); 
             }
 
             if (!isCurrentToken(TokenType.OPERATOR, ".")){
                 //throw new ParseException("E: expected '.'");
+                System.out.println("Parse Exception3");
             }
             readNT();
             procE();
@@ -155,7 +156,7 @@ public class Parser {
     private void procT() throws IOException{
         procTA();
         int treesToPop = 0;
-        while(isCurrentToken(TokenType.OPERATOR, ",")){
+        while(isCurrentToken(TokenType.COMMA, ",")){
             readNT();
             procTA();
             treesToPop += treesToPop;
@@ -168,7 +169,7 @@ public class Parser {
     
 
     public void procTA() throws IOException{
-        procTA();
+        procTC();
         while(isCurrentToken(TokenType.KEYWORD, "aug")){
             readNT();
             procTC();
@@ -183,6 +184,7 @@ public class Parser {
             procTC();
             if(!isCurrentToken(TokenType.OPERATOR, "|")){
                 // throw new ParseException("Tc:  expected");
+                System.out.println("Parse Exception4");
             }
             readNT();
             procTC();
@@ -340,10 +342,12 @@ public class Parser {
 
 
     private void procAP() throws IOException{
+        procR();
         while(isCurrentToken(TokenType.OPERATOR,"@")){
             readNT();
             if(!isCurrentTokenType(TokenType.IDENTIFIER)){
                 // throw new ParseException();
+                System.out.println("Parse Exception5");
             }
             readNT();
             procR();
@@ -383,6 +387,7 @@ public class Parser {
             procE();
             if(! isCurrentTokenType(TokenType.R_PAREN)){
                 // throw new ParseException("RN: ')' expected");
+                System.out.println("Parse Exception6");
             }
         }
         else if(isCurrentToken(TokenType.KEYWORD, "dummy")){
@@ -438,23 +443,25 @@ public class Parser {
             procD();
             readNT();
         
-        if (!isCurrentTokenType(TokenType.R_PAREN)){
-            //throw new ParseException("DB: expected ')'");
+            if (!isCurrentTokenType(TokenType.R_PAREN)){
+                //throw new ParseException("DB: expected ')'");
+                System.out.println("Parse Exception7");
+            }
+        
+            readNT();
         }
         
-        readNT();
-        }
         
         else if (isCurrentTokenType(TokenType.IDENTIFIER)){
             
             readNT();
-            
             if (isCurrentToken(TokenType.OPERATOR, ",")){
                 readNT();
                 procVL();
 
                 if (!isCurrentToken(TokenType.OPERATOR,"=")){
                     //throw new ParseException("DB expeted '='")
+                    System.out.println("Parse Exception8");
                 }
                 buildASTNode(ASTNodeType.COMMA, 2);
                 readNT();
@@ -476,9 +483,11 @@ public class Parser {
                     }
                     if (treesToPop == 0){
                         //throw new ParseException("E: expected at least one Vb");
+                        System.out.println("Parse Exception9");
                     }
                     if (!isCurrentToken(TokenType.OPERATOR, "=")){
                         // throw new ParseException("DB: expexted =");
+                        System.out.println("Parse Exception10");
                     }
                     readNT();
                     procE();
@@ -504,6 +513,7 @@ public class Parser {
                 procVL();
                 if(!isCurrentTokenType(TokenType.R_PAREN)){
                     // throw new ParseException("VB: ')' expected");
+                    System.out.println("Parse Exception11");
                 }
                 readNT();
             }
@@ -513,14 +523,16 @@ public class Parser {
     private void procVL() throws IOException{
         if(!isCurrentTokenType(TokenType.IDENTIFIER)){
             // throw new ParseException("VL: Identifier Expected");
+            System.out.println("Parse Exception12");
         }
         else{
             readNT();
             int treesToPop = 0;
-            while( isCurrentToken(TokenType.OPERATOR, ",")){
+            while( isCurrentToken(TokenType.COMMA, ",")){
                 readNT();
                 if(!isCurrentTokenType(TokenType.IDENTIFIER)){
                     // throw new ParseException("VL: Identifier Expected");
+                    System.out.println("Parse Exception13");
                 }
                 readNT();
                 treesToPop+=treesToPop;   
@@ -529,5 +541,17 @@ public class Parser {
             buildASTNode(ASTNodeType.COMMA,treesToPop+1);
         }
         }
+    }
+
+    public void printAST(){
+        printAST(stack.pop());
+    }
+
+    private void printAST(ASTNode ast){
+        // ASTNode ast  = stack.pop();
+        System.out.println(ast.getName());
+        if (ast.getChild() != null ) printAST(ast.getChild());
+        if (ast.getSibling() != null ) printAST(ast.getSibling());
+
     }
 }
