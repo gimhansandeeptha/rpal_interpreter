@@ -1,58 +1,68 @@
 public enum ASTNodeType {
 
-    IDENTIFIER,
-    STRING,
-    INTEGER,
+    IDENTIFIER("<ID:%s>"),
+    STRING("<STR:%s>"),
+    INTEGER("<STR:%s>"),
 
-    LET,
-    LAMBDA,
-    WHERE,
-    TAU,
-    AUG,
-    CONDITIONAL,
+    LET("let"),
+    LAMBDA("lambda"),
+    WHERE("where"),
+    TAU("tau"),
+    AUG("aug"),
+    CONDITIONAL("->"),
 
-    OR,
-    BOOLAND,
-    NOT,
-    GR,
-    GE,
-    LS,
-    LE,
-    EQ,
-    NE,
+    OR("or"),
+    BOOLAND("&"),
+    NOT("not"),
+    GR("gr"),
+    GE("ge"),
+    LS("ls"),
+    LE("le"),
+    EQ("eq"),
+    NE("ne"),
 
     //Arithmatic expressions 
-    PLUS,
-    MINUS,
-    NEG,
-    MUL,
-    DEV,
-    EXP,
-    AT,
+    PLUS("+"),
+    MINUS("-"),
+    NEG("neg"),
+    MUL("*"),
+    DEV("/"),
+    EXP("**"),
+    AT("@"),
 
     //Operators and operands 
-    GAMMA,
-    TRUE,
-    FALSE,
-    NIL,
-    DUMMY,
+    GAMMA("gamma"),
+    TRUE("<true>"),
+    FALSE("<false>"),
+    NIL("<nil>"),
+    DUMMY("<dummy>"),
 
     //Definitions 
-    WITHIN,
-    AND,
-    REC,
-    EQUAL,
-    FCNFORM,
+    WITHIN("whitin"),
+    AND("and"),
+    REC("rec"),
+    EQUAL("="),
+    FCNFORM("function_form"),
 
     //Variables 
-    PARAN,
-    COMMA,
+    PARAN("()"),
+    COMMA(","),
 
-    Y,
+    Y("Y"),
 
-    BETA,
-    DELTA,
-    ETA,
-    TUPLE;
+    BETA(""),
+    DELTA(""),
+    ETA(""),
+    TUPLE("");
+
+    private String name;
+
+    private ASTNodeType(String name){
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
 
 }
