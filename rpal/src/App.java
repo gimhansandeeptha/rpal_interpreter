@@ -12,8 +12,8 @@ public class App {
 
         // Parser check
         Parser parser = new Parser();
-        parser.buildAST();
-        parser.printAST();
+        ASTNode ast = parser.buildAST();
+        parser.printAST(ast);
 
         
     }
