@@ -9,7 +9,7 @@ public class AST {
     private Delta current;
     private Delta rootDelta;
     private int index;
-    private ArrayDeque<DeltaBody> deltaQueue;
+    private ArrayDeque<DeltaBody> deltaBodyQueue;
 
     public AST(ASTNode root){
         this.root = root;
@@ -44,6 +44,10 @@ public class AST {
     public void standardize(){
         standardize(root);
         isStandardized = true;
+    }
+
+    public boolean isStandardized(){
+        return isStandardized;
     }
 
     private void standardize(ASTNode node){
@@ -206,7 +210,80 @@ public class AST {
         child.setSibling(null);
     }
 
-    
+    public Delta createDeltas(){
+        deltaBodyQueue = new ArrayDeque<deltaBody>();
+        index =0;
+        current = createDelta(root);
+        buildDeltaBodies();
+        return rootDelta;
+    }
 
+    private createDelta(ASTNode startASTNode){
+        DeltaBody newDeltaBody = new DeltaBody();
+        newDeltaBody.startNode = startASTNode;
+        newDeltaBody.body = new Stack<ASTNode>();
+        deltaBodyQueue.add(newDeltaBody);
+
+        Delta delta = new Delta();
+        delta.setBody(newDeltaBody.body);
+        delta.setIndex(deltaIndex++);
+        current = delta;
+
+        if(startASTNode == root) rootDelta = current;
+
+        return delta;
+    }
+
+    private void processdDeltaBodyQueue(){
+        while( ! deltaBodyQueue.isEmpty()){
+            DeltaBody deltaBody = deltaBodyQueue.pop();
+            buildDeltaBody(deltaBody.startNode, deltaBody.body);
+        }
+    }
+
+    private void buildDeltaBody(ASTNode node, Stack<ASTNode> body){
+        if( node.getType() == ASTNodeType.LAMBDA ){
+            Delta delta = createDelta( node.getChild().getSibling() );
+
+            if( node.getChild().getType() == ASTNodeType.COMMA ){
+                ASTNode comma = node.getChild();
+                ASTNode variableNode = comma.getChild();
+                while(variableNode != null){
+                    delta.addBoundVars(variableNode.getValue());
+                    variableNode = variableNode.getSibling();
+                }
+            } else delta.addBoundVars(node.getChild().getValue());
+            
+            body.push(delta);
+            return;
+        }
+
+        else if(node.getType() = ASTNodeType.CONDITIONAL){
+            ASTNode condition = node.getChild();
+            ASTNode thenNode = condition.getSibling();
+            ASTNode elseNode = thenNode.getSibling();
+
+            Beta newBeta = new Beta();
+            buildDeltaBody( thenNode, newBeta.getThenBody());
+            buildDeltaBody( elseNode, newBeta.getElseBody());
+
+            body.push(newBeta);
+            buildDeltaBody( condition, body);
+
+            return;
+        }
+
+        body.push(node);
+        ASTNode child = node.getChild();
+        while(child != null){
+            buildDeltaBody(child, body);
+            child = child.getSibling();
+        }
+    }
+
+    private class DeltaBody{
+        Stack<ASTNode> body;
+        ASTNode startNode;
+    }
     
 }
