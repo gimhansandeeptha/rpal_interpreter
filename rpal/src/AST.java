@@ -213,8 +213,8 @@ public class AST {
     public Delta createDeltas(){
         deltaBodyQueue = new ArrayDeque<deltaBody>();
         index =0;
-        current = createDelta(root);
-        buildDeltaBodies();
+        current = createDelta(root);//
+        processdDeltaBodyQueue();
         return rootDelta;
     }
 
