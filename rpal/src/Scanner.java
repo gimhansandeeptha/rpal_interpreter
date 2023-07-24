@@ -190,7 +190,7 @@ public class Scanner {
         StringBuilder stringBuilder = new StringBuilder(c);
         String nextChar = c;
 
-        while(RegEx.PunctionRegex.matcher(nextChar).matches()){
+        if(RegEx.PunctionRegex.matcher(nextChar).matches()){
             if (nextChar.equals("(")) punction.setTokenType(TokenType.L_PAREN);
             else if (nextChar.equals(")")) punction.setTokenType(TokenType.R_PAREN);
             else if (nextChar.equals(";")) punction.setTokenType(TokenType.SEMICOLON);

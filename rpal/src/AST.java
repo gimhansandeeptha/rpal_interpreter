@@ -1,6 +1,7 @@
 //import required libraries
 
 import java.util.ArrayDeque;
+import java.util.Stack;
 
 public class AST {
 
@@ -65,7 +66,7 @@ public class AST {
             ASTNode equal = node.getChild();
 
             if (equal.getType() != ASTNodeType.EQUAL){
-                throw new StandardizeException("left child not equal");
+                System.out.println("left child not equal");
             }
 
             ASTNode e = equal.getChild().getSibling();
@@ -173,7 +174,7 @@ public class AST {
 
     private void populateCommaTau(ASTNode equal, ASTNode comma, ASTNode tau){
         if (equal.getType() != ASTNodeType.EQUAL){
-            throw new StandardizeException("Child is not EQUAL node");
+            System.out.println("Child is not EQUAL node");
         }
         ASTNode x= equal.getChild();
         ASTNode e = x.getSibling();
@@ -211,14 +212,14 @@ public class AST {
     }
 
     public Delta createDeltas(){
-        deltaBodyQueue = new ArrayDeque<deltaBody>();
+        deltaBodyQueue = new ArrayDeque<DeltaBody>();
         index =0;
         current = createDelta(root);//
         processdDeltaBodyQueue();
         return rootDelta;
     }
 
-    private createDelta(ASTNode startASTNode){
+    private Delta createDelta(ASTNode startASTNode){
         DeltaBody newDeltaBody = new DeltaBody();
         newDeltaBody.startNode = startASTNode;
         newDeltaBody.body = new Stack<ASTNode>();
@@ -226,7 +227,7 @@ public class AST {
 
         Delta delta = new Delta();
         delta.setBody(newDeltaBody.body);
-        delta.setIndex(deltaIndex++);
+        delta.setIndex(index++);
         current = delta;
 
         if(startASTNode == root) rootDelta = current;
@@ -258,7 +259,7 @@ public class AST {
             return;
         }
 
-        else if(node.getType() = ASTNodeType.CONDITIONAL){
+        else if(node.getType() == ASTNodeType.CONDITIONAL){
             ASTNode condition = node.getChild();
             ASTNode thenNode = condition.getSibling();
             ASTNode elseNode = thenNode.getSibling();

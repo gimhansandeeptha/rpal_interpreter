@@ -6,13 +6,14 @@ public class Parser {
     private Token currentToken;
     Stack<ASTNode> stack;
 
-    public ASTNode buildAST() throws IOException{
-        s = new Scanner("D:\\Gimhan Sandeeptha\\Gimhan\\Semester 04\\Programming Languages\\PL Group Project - 12\\rpal_interpreter\\rpal\\test.txt");
-        stack = new Stack<>();
+    public Parser(Scanner s){
+        this.s = s;
+        stack = new Stack<ASTNode>();
+      }
+      
+    public AST buildAST() throws IOException{
         startParse();
-        return stack.pop();
-        // return new AST(stack.pop());
-
+        return new AST(stack.pop());
     }
 
     public void startParse() throws IOException{

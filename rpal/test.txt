@@ -1,4 +1,5 @@
-let Sum_list L = Partial_sum (L, Order L)
-where rec Partial_sum (L,N) = N eq 0 -> 0 | L N + Partial_sum(L,N-1)
+let rec Fib m n T x y = (x+y) gr n -> T |((x+y) ls m -> Fib m n T y (x+y) | Fib m n (T aug (x+y)) y (x+y)) 
 in 
-Print ( Sum_list (2,3,4,5) )
+let func m n = m eq 0 -> (n eq 0 -> (nil aug 0) | (Fib m n (0,1) 0 1)) | m eq 1 -> (Fib m n (nil aug 1) 0 1) | (Fib m n nil 0 1)
+in
+Print(func 0 100)
