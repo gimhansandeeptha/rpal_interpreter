@@ -1,0 +1,77 @@
+# .PHONY: dirs all clean cl
+
+# JC = javac
+# JFLAGS = -g
+# CLASSDIR = $(shell cd)
+# # CLASSDIR = class #need only this when CLASSDIR = class (and NOT pwd)
+# SRCDIR = src
+
+# .SUFFIXES: .java .class
+
+# $(CLASSDIR)/%.class : $(SRCDIR)/%.java
+# 	@echo -n ">>> Compiling $<..."
+# 	@$(JC) $(JFLAGS) -sourcepath $(SRCDIR) -cp $(CLASSDIR) -d $(CLASSDIR) $<
+# 	@echo " done."
+# # Source files
+# SOURCES := \
+# 	App.java \
+# 	 AST.java \
+# 	 ASTNode.java\
+# 	 ASTNodeType.java\
+# 	 Beta.java\
+# 	 CSEMachine.java\
+# 	 Delta.java\
+# 	 Environment.java\
+# 	 Eta.java\
+# 	 EvaluationError.java\
+# 	 MyAST.java\
+# 	 NodeCopier.java\
+# 	 Parser.java\
+# 	 RegEx.java\
+# 	 rpal20.java\
+# 	 Scanner.java\
+# 	 Token.java\
+# 	 TokenType.java\
+# 	 Tuple.java\
+
+# all: dirs classestocompile
+
+# classestocompile: $(addprefix $(CLASSDIR)/, $(SOURCEFILES:.java=.class))
+
+# # Example usage: `make run cmd='-ast ~/rpal/tests/add'`
+# # The cmd variable is passed to the p1 script, which in turn passes
+# # it to P1.java
+# run: all
+#   ifeq ($(strip $(cmd)),) #NOTE: conditional directive must NOT start with a tab!
+# 		@echo "Please provide parser switches using the cmd variable e.g."
+# 		@echo "make run cmd='-ast <filename>'"
+#   else
+# 		@./rpal20 $(cmd)
+#   endif
+# #@java -cp $(CLASSDIR) P1 #need only this when CLASSDIR = class (and NOT pwd)
+
+
+# # example usage: `make jar`
+# jar: all
+# 	@echo -n ">>> Generating rpal20.jar... "
+# 	@jar -cf rpal20.jar -m MANIFEST.MF -C . com/ rpal20.class
+# 	@echo " done."
+
+# # example usage: `make test`
+# test: all
+# 	./difftest.rpal20 -1 "./rpal -st FILE" -2 "java -cp $(CLASSDIR) rpal20 -st FILE" -t ~/rpal/tests/
+# #./difftest.pl -1 "./rpal -ast -noout FILE" -2 "java P1 -ast -noout FILE" -t ~/rpal/tests/
+
+# dirs:
+# 	@mkdir -p $(CLASSDIR)
+
+# cl: clean
+
+# clean:
+# 	@rm -rf com
+# 	@rm -f rpal20.class
+# 	# @rm -f P2.class
+# 	@rm -f *.jar
+# 	@rm -fr diffresult
+# #@rm -fr $(CLASSDIR) #need only this when CLASSDIR = class (and NOT pwd)
+
