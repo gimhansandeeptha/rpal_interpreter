@@ -2,15 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Class to make copies of nodes on value stack. Used to pass back copies of
- * environment bindings so that later uses of those bindings are not affected
- * by any changes made in any earlier deltas.
- * 
- * <p>Uses the Visitor pattern to avoid instanceOf code smell.
- * 
- * @author Raj
- */
+
 public class NodeCopier{
   
   public ASTNode copy(ASTNode astNode){

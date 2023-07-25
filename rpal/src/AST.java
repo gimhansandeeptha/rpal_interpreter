@@ -6,7 +6,7 @@ import java.util.Stack;
 public class AST {
 
     private  ASTNode root;
-    private boolean isStandardized;
+    private boolean standardized;
     private Delta current;
     private Delta rootDelta;
     private int index;
@@ -16,6 +16,7 @@ public class AST {
         this.root = root;
     }
 
+    //prints the tree nodes in pre order traversal
     public void printTree(){
         preOrderPrint(this.root, "");
     }
@@ -42,13 +43,14 @@ public class AST {
         }
     }
 
+    //Standardize the AST
     public void standardize(){
         standardize(root);
-        isStandardized = true;
+        standardized = true;
     }
 
     public boolean isStandardized(){
-        return isStandardized;
+        return standardized;
     }
 
     private void standardize(ASTNode node){
@@ -62,7 +64,7 @@ public class AST {
         }
 
         switch (node.getType()) {
-        case LET:
+        case LET://Standardizing 'let'
             ASTNode equal = node.getChild();
 
             if (equal.getType() != ASTNodeType.EQUAL){
@@ -76,7 +78,7 @@ public class AST {
             equal.setType(ASTNodeType.LAMBDA);
         break;
             
-        case WHERE:
+        case WHERE://Standardizing 'where'
             equal = node.getChild().getSibling();
             node.getChild().setSibling(null);
             equal.setSibling(node.getChild());
@@ -85,13 +87,13 @@ public class AST {
             standardize(node);
         break;
 
-        case FCNFORM:
+        case FCNFORM://Standardizing 'fcn_form'
             ASTNode childSibling = node.getChild().getSibling();
             node.getChild().setSibling(lambdaChain(childSibling));
             node.setType(ASTNodeType.EQUAL);
         break;
         
-        case AT:
+        case AT://Standardizing the '@' Operator
             ASTNode e1 = node.getChild();
             ASTNode n = e1.getSibling();
             ASTNode e2 = n.getSibling();
@@ -102,11 +104,10 @@ public class AST {
             n.setSibling(e1);
             gamma.setSibling(e2);
             node.setChild(gamma);
-            node.setChild(gamma);
             node.setType(ASTNodeType.GAMMA);
         break;
 
-        case WITHIN:
+        case WITHIN://Standardizing the 'within'
             ASTNode x1 = node.getChild().getChild();
             e1 = x1.getSibling();
             ASTNode x2 = node.getChild().getSibling().getChild();
@@ -124,12 +125,12 @@ public class AST {
             node.setChild(x2);
         break;
 
-        case LAMBDA:
+        case LAMBDA://
             childSibling = node.getChild().getSibling();
             node.getChild().setSibling(lambdaChain(childSibling));
         break;
 
-        case AND:
+        case AND://Standardizing Simultaneous Definitions
             ASTNode comma = new ASTNode();
             ASTNode tau = new ASTNode();
             comma.setType(ASTNodeType.COMMA);
@@ -146,7 +147,7 @@ public class AST {
             node.setChild(comma);
         break;
         
-        case REC:
+        case REC://Standardizing 'rec'
             child = node.getChild();
             ASTNode x = child.getChild();
             lambda = new ASTNode();
@@ -168,6 +169,12 @@ public class AST {
         break;
 
         default:
+            //Do not standrdize
+            //Unary operators
+            //Binary operators
+            //conditional operator
+            //tau
+            //","
             break;
         }
     }
@@ -197,10 +204,10 @@ public class AST {
     }
 
     private void setChild(ASTNode parent, ASTNode child){
-        if (parent.getChild() == null){
+        if (parent.getChild() == null){ //if parent does not have a create child node
             parent.setChild(child);
         }
-        else{
+        else{//if parent has a child passes child to last sibling of the parent's children
             ASTNode sibling = parent.getChild();
 
             while (sibling.getSibling() != null){
@@ -211,6 +218,7 @@ public class AST {
         child.setSibling(null);
     }
 
+    //Create delta structures from the standardized tree
     public Delta createDeltas(){
         deltaBodyQueue = new ArrayDeque<DeltaBody>();
         index =0;

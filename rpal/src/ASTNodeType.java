@@ -45,10 +45,10 @@ public enum ASTNodeType {
     FCNFORM("function_form"),
 
     //Variables 
-    PARAN("()"),
+    PARAN("<()>"),
     COMMA(","),
 
-    Y("Y"),
+    Y("Y*"),
 
     BETA(""),
     DELTA(""),

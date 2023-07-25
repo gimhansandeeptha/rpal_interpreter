@@ -1,3 +1,6 @@
+/*
+ * Type of a token is set by the Scanner
+ */
 public enum TokenType {
     IDENTIFIER, 
     INTEGER , 
@@ -8,6 +11,6 @@ public enum TokenType {
     R_PAREN , 
     SEMICOLON , 
     COMMA , 
-    KEYWORD,
+    KEYWORD,//used to represent reverved keywords of RPAL language
     PUNCTION ;
 }

@@ -1,3 +1,8 @@
+/*
+ * Sequence of tokens are passed from scanner to parser
+ * A token consists of type,value and line number
+ */
+
 public class Token {
     private TokenType tokenType;
     private String token;
