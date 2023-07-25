@@ -2,10 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * Represents a lambda closure.
- * @author Raj
- */
+
 public class Delta extends ASTNode{
   private List<String> boundVars;
   private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
