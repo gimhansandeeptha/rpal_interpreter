@@ -6,7 +6,7 @@ import java.util.Stack;
 public class AST {
 
     private  ASTNode root;
-    private boolean isStandardized;
+    private boolean standardized;
     private Delta current;
     private Delta rootDelta;
     private int index;
@@ -44,11 +44,11 @@ public class AST {
 
     public void standardize(){
         standardize(root);
-        isStandardized = true;
+        standardized = true;
     }
 
     public boolean isStandardized(){
-        return isStandardized;
+        return standardized;
     }
 
     private void standardize(ASTNode node){
@@ -101,7 +101,6 @@ public class AST {
             e1.setSibling(null);
             n.setSibling(e1);
             gamma.setSibling(e2);
-            node.setChild(gamma);
             node.setChild(gamma);
             node.setType(ASTNodeType.GAMMA);
         break;

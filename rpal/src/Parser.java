@@ -382,7 +382,7 @@ public class Parser {
             createTerminalASTNode(ASTNodeType.TRUE, "true");
         }
         else if(isCurrentToken(TokenType.KEYWORD, "false")){
-            createTerminalASTNode(ASTNodeType.TRUE, "false");
+            createTerminalASTNode(ASTNodeType.FALSE, "false");
         }
         else if(isCurrentTokenType(TokenType.L_PAREN)){
             readNT();
@@ -391,6 +391,9 @@ public class Parser {
                 // throw new ParseException("RN: ')' expected");
                 System.out.println("Parse Exception6");
             }
+        }
+        else if (isCurrentToken(TokenType.KEYWORD,"nil")){
+            createTerminalASTNode(ASTNodeType.NIL, "nil");
         }
         else if(isCurrentToken(TokenType.KEYWORD, "dummy")){
             createTerminalASTNode(ASTNodeType.DUMMY, "dummy");
@@ -474,7 +477,7 @@ public class Parser {
                 if (isCurrentToken(TokenType.OPERATOR, "=")){
                     readNT();
                     procE();
-                    buildASTNode(ASTNodeType.EQ,2);
+                    buildASTNode(ASTNodeType.EQUAL,2);
                 }
                 else {
                     int treesToPop = 0;
