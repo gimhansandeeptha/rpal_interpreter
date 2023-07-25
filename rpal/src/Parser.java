@@ -384,6 +384,9 @@ public class Parser {
         else if(isCurrentToken(TokenType.KEYWORD, "false")){
             createTerminalASTNode(ASTNodeType.TRUE, "false");
         }
+        else if(isCurrentToken(TokenType.KEYWORD, "nil")){ 
+            createTerminalASTNode(ASTNodeType.NIL, "nil");
+    }
         else if(isCurrentTokenType(TokenType.L_PAREN)){
             readNT();
             procE();
@@ -474,7 +477,7 @@ public class Parser {
                 if (isCurrentToken(TokenType.OPERATOR, "=")){
                     readNT();
                     procE();
-                    buildASTNode(ASTNodeType.EQ,2);
+                    buildASTNode(ASTNodeType.EQUAL,2);
                 }
                 else {
                     int treesToPop = 0;
