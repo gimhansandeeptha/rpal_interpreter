@@ -1,6 +1,10 @@
 import java.io.IOException;
 import java.util.Stack;
 
+/*
+ * Recursive decent parcer for RPAL grammar
+ * Get inputs from Scanner and build AST
+ */
 public class Parser {
     private Scanner s;
     private Token currentToken;
@@ -74,7 +78,10 @@ public class Parser {
     }
 
 
-    
+    /*
+     * Create a N-ary AST node
+     * n_children => number of children of the new node
+     */
     private void buildASTNode(ASTNodeType nodeType, int n_children){
         ASTNode node = new ASTNode();
         node.setType(nodeType);
@@ -102,12 +109,12 @@ public class Parser {
 
 
     private void procE() throws IOException{
-        if (isCurrentToken(TokenType.KEYWORD, "let")){// E => let D in E => let
+        if (isCurrentToken(TokenType.KEYWORD, "let")){    //E -> ’let’ D ’in’ E
             readNT();
             procD();
 
             if (!isCurrentToken(TokenType.KEYWORD, "in")){
-                // throw new ParseException("E: expected 'in'");
+                
                 System.out.println("Parse Exception1");
             }
             readNT();
@@ -115,7 +122,7 @@ public class Parser {
             buildASTNode(ASTNodeType.LET, 2);
         }
 
-        else if (isCurrentToken(TokenType.KEYWORD, "fn")){ //fn Vb+ .E => lambda
+        else if (isCurrentToken(TokenType.KEYWORD, "fn")){ //E -> ’fn’ Vb+ ’.’ E
             int treesToPop = 0;
 
             readNT();
@@ -126,12 +133,12 @@ public class Parser {
             }
 
             if (treesToPop == 0){
-                //throw new ParseException("E: At least one 'Vb' expected");
+            
                System.out.println("Parse Exception2"); 
             }
 
             if (!isCurrentToken(TokenType.OPERATOR, ".")){
-                //throw new ParseException("E: expected '.'");
+                
                 System.out.println("Parse Exception3");
             }
             readNT();
@@ -141,14 +148,14 @@ public class Parser {
         }
         
         else{  
-            procEW(); //E => Ew
+            procEW(); //E -> Ew;
         }
 
     }
 
     private void procEW() throws IOException{
-        procT();
-        if(isCurrentToken(TokenType.KEYWORD, "where")){
+        procT();  // Ew -> T;
+        if(isCurrentToken(TokenType.KEYWORD, "where")){ //Ew -> T ’where’ Dr
             readNT();
             procDR();
             buildASTNode(ASTNodeType.WHERE, 2);
@@ -156,9 +163,9 @@ public class Parser {
     }
 
     private void procT() throws IOException{
-        procTA();
+        procTA(); //T -> Ta ;
         int treesToPop = 0;
-        while(isCurrentToken(TokenType.COMMA, ",")){
+        while(isCurrentToken(TokenType.COMMA, ",")){ //T -> Ta ( ’,’ Ta )+
             readNT();
             procTA();
             treesToPop = treesToPop+1;
@@ -171,8 +178,8 @@ public class Parser {
     
 
     public void procTA() throws IOException{
-        procTC();
-        while(isCurrentToken(TokenType.KEYWORD, "aug")){
+        procTC(); //Ta -> Tc ;
+        while(isCurrentToken(TokenType.KEYWORD, "aug")){ //Ta -> Ta ’aug’ Tc
             readNT();
             procTC();
             buildASTNode(ASTNodeType.AUG,2);
@@ -180,12 +187,12 @@ public class Parser {
     }
     
     public void procTC() throws IOException{
-        procB();
-        if (isCurrentToken(TokenType.OPERATOR, "->")){
+        procB(); //Tc -> B ;
+        if (isCurrentToken(TokenType.OPERATOR, "->")){ //Tc -> B ’->’ Tc ’|’ Tc
             readNT();
             procTC();
             if(!isCurrentToken(TokenType.OPERATOR, "|")){
-                // throw new ParseException("Tc:  expected");
+                
                 System.out.println("Parse Exception4");
             }
             readNT();
@@ -197,9 +204,9 @@ public class Parser {
 
     private void procB() throws IOException{
         
-        procBT();
+        procBT(); //B -> Bt ;
         
-        while (isCurrentToken(TokenType.KEYWORD, "or")){
+        while (isCurrentToken(TokenType.KEYWORD, "or")){ //B ->B’or’ Bt
             readNT();
             procBT();
             buildASTNode(ASTNodeType.OR, 2);
@@ -208,9 +215,9 @@ public class Parser {
     
     private void procBT() throws IOException{
 
-        procBS();
+        procBS();  //Bt -> Bs ;
 
-        while (isCurrentToken(TokenType.OPERATOR, "&")){
+        while (isCurrentToken(TokenType.OPERATOR, "&")){ //Bt -> Bt ’&’ Bs
 
             readNT();
             procBS();
@@ -220,42 +227,42 @@ public class Parser {
     }
 
     private void procBS() throws IOException{
-        if(isCurrentToken(TokenType.KEYWORD,"not")){
+        if(isCurrentToken(TokenType.KEYWORD,"not")){ //Bs -> ’not’ Bp 
             readNT();
             procBP();
             buildASTNode(ASTNodeType.NOT,1);
         }
-        else procBP();
+        else procBP();  // Bs -> Bp ;
     }
     
     private void procBP() throws IOException{
-        procA();
-        if(isCurrentToken(TokenType.KEYWORD,"gr") || isCurrentToken(TokenType.OPERATOR,">")){
+        procA();  //Bp -> A ;
+        if(isCurrentToken(TokenType.KEYWORD,"gr") || isCurrentToken(TokenType.OPERATOR,">")){//Bp -> A (’gr’ | ’>’ ) A
             readNT();
             procA();
             buildASTNode(ASTNodeType.GR, 2);
         }
-        else if(isCurrentToken(TokenType.KEYWORD,"ge") || isCurrentToken(TokenType.OPERATOR,">=")){
+        else if(isCurrentToken(TokenType.KEYWORD,"ge") || isCurrentToken(TokenType.OPERATOR,">=")){//Bp -> A (’ge’ | ’>=’) A
             readNT();
             procA();
             buildASTNode(ASTNodeType.GE, 2);
         }
-        else if(isCurrentToken(TokenType.KEYWORD,"ls") || isCurrentToken(TokenType.OPERATOR,"<")){
+        else if(isCurrentToken(TokenType.KEYWORD,"ls") || isCurrentToken(TokenType.OPERATOR,"<")){//Bp -> A (’ls’ | ’<’ ) A
             readNT();
             procA();
             buildASTNode(ASTNodeType.LS, 2);
         }
-        else if(isCurrentToken(TokenType.KEYWORD,"le") || isCurrentToken(TokenType.OPERATOR,"<=")){
+        else if(isCurrentToken(TokenType.KEYWORD,"le") || isCurrentToken(TokenType.OPERATOR,"<=")){//Bp -> A (’le’ | ’<=’) A
             readNT();
             procA();
             buildASTNode(ASTNodeType.LE, 2);
         }
-        else if(isCurrentToken(TokenType.KEYWORD,"eq")){
+        else if(isCurrentToken(TokenType.KEYWORD,"eq")){//Bp -> A ’eq’ A
             readNT();
             procA();
             buildASTNode(ASTNodeType.EQ, 2);
         }
-        else if(isCurrentToken(TokenType.KEYWORD,"ne")){
+        else if(isCurrentToken(TokenType.KEYWORD,"ne")){//Bp -> A ’ne’ A
             readNT();
             procA();
             buildASTNode(ASTNodeType.NE, 2);
@@ -265,30 +272,30 @@ public class Parser {
 
     private void procA() throws IOException{
 
-        if (isCurrentToken(TokenType.OPERATOR, "+")){
+        if (isCurrentToken(TokenType.OPERATOR, "+")){ //A ->A’+’ At
             readNT();
             procAT();
         }
 
-        else if (isCurrentToken(TokenType.OPERATOR, "-")){
+        else if (isCurrentToken(TokenType.OPERATOR, "-")){//A -> A ’-’ At
             readNT();
             procAT();
             buildASTNode(ASTNodeType.NEG, 1);
         }
 
         else{
-            procAT();
+            procAT(); //A -> At ;
         }
         
         boolean plus = true;
         
         while (isCurrentToken(TokenType.OPERATOR, "+") || isCurrentToken(TokenType.OPERATOR, "-")){
             
-            if (currentToken.getToken().equals("+")){
+            if (currentToken.getToken().equals("+")){ //A -> ’+’ At
                 plus = true;
             }
 
-            else if (currentToken.getToken().equals("-")){
+            else if (currentToken.getToken().equals("-")){//A -> ’-’ At
                 plus = false;
             }
 
@@ -307,7 +314,7 @@ public class Parser {
 
     private void procAT() throws IOException{
         
-        procAF();
+        procAF(); //At -> Af ;
 
         boolean mult = true;
 
@@ -324,18 +331,18 @@ public class Parser {
             readNT();
             procAF();
 
-            if (mult){
+            if (mult){ //At -> At ’*’ Af
                 buildASTNode(ASTNodeType.MUL, 2);
             }
-            else {
+            else { //At -> At ’/’ Af
                 buildASTNode(ASTNodeType.DEV, 2);
             }
         }
     }
 
     private void procAF() throws IOException{
-        procAP();
-        if (isCurrentToken(TokenType.OPERATOR,"**")){
+        procAP(); //Af -> Ap ;
+        if (isCurrentToken(TokenType.OPERATOR,"**")){ //Af -> Ap ’**’ Af
             readNT();
             procAF();
             buildASTNode(ASTNodeType.EXP,2);
@@ -344,11 +351,11 @@ public class Parser {
 
 
     private void procAP() throws IOException{
-        procR();
-        while(isCurrentToken(TokenType.OPERATOR,"@")){
+        procR(); // Ap -> R ;
+        while(isCurrentToken(TokenType.OPERATOR,"@")){ //Ap -> Ap ’@’ ’<IDENTIFIER>’ R
             readNT();
             if(!isCurrentTokenType(TokenType.IDENTIFIER)){
-                // throw new ParseException();
+                
                 System.out.println("Parse Exception5");
             }
             readNT();
@@ -358,9 +365,9 @@ public class Parser {
     }
 
     private void procR() throws IOException{
-        procRN();
+        procRN(); //R -> Rn ;
         readNT();
-        while(isCurrentTokenType(TokenType.INTEGER)
+        while(isCurrentTokenType(TokenType.INTEGER) //R ->RRn
                 || isCurrentTokenType(TokenType.STRING)
                 || isCurrentTokenType(TokenType.IDENTIFIER)
                 || isCurrentToken(TokenType.KEYWORD, "true")
@@ -375,30 +382,30 @@ public class Parser {
     }
     
     private void procRN() throws IOException{
-        if(isCurrentTokenType(TokenType.IDENTIFIER)
-            || isCurrentTokenType(TokenType.INTEGER)
-            || isCurrentTokenType(TokenType.STRING)){}
-        else if(isCurrentToken(TokenType.KEYWORD, "true")){
+        if(isCurrentTokenType(TokenType.IDENTIFIER) //Rn -> ’<IDENTIFIER>’
+            || isCurrentTokenType(TokenType.INTEGER) //-> ’<INTEGER>’
+            || isCurrentTokenType(TokenType.STRING)){}//-> ’<STRING>’
+        else if(isCurrentToken(TokenType.KEYWORD, "true")){//-> ’true’
             createTerminalASTNode(ASTNodeType.TRUE, "true");
         }
-        else if(isCurrentToken(TokenType.KEYWORD, "false")){
+        else if(isCurrentToken(TokenType.KEYWORD, "false")){//-> ’false’
             createTerminalASTNode(ASTNodeType.FALSE, "false");
         }
-        else if(isCurrentToken(TokenType.KEYWORD, "nil")){ 
+        else if(isCurrentToken(TokenType.KEYWORD, "nil")){ //-> ’nil’
             createTerminalASTNode(ASTNodeType.NIL, "nil");
     }
-        else if(isCurrentTokenType(TokenType.L_PAREN)){
+        else if(isCurrentTokenType(TokenType.L_PAREN)){ //-> ’(’ E ’)’
             readNT();
             procE();
             if(! isCurrentTokenType(TokenType.R_PAREN)){
-                // throw new ParseException("RN: ')' expected");
+               
                 System.out.println("Parse Exception6");
             }
         }
         else if (isCurrentToken(TokenType.KEYWORD,"nil")){
             createTerminalASTNode(ASTNodeType.NIL, "nil");
         }
-        else if(isCurrentToken(TokenType.KEYWORD, "dummy")){
+        else if(isCurrentToken(TokenType.KEYWORD, "dummy")){//-> ’dummy’
             createTerminalASTNode(ASTNodeType.DUMMY, "dummy");
         }
     }
@@ -407,8 +414,8 @@ public class Parser {
 
     
     private void procD() throws IOException{
-        procDA();
-        if (isCurrentToken(TokenType.KEYWORD,"within" )){
+        procDA(); //D -> Da ;
+        if (isCurrentToken(TokenType.KEYWORD,"within" )){//D -> Da ’within’ D
             readNT();
             procD();
             buildASTNode(ASTNodeType.WITHIN,2);
@@ -417,9 +424,9 @@ public class Parser {
     }
 
     private void procDA() throws IOException{
-        procDR();
+        procDR();//Da -> Dr ;
         int treesToPop = 0;
-        while(isCurrentToken(TokenType.KEYWORD, "and")){
+        while(isCurrentToken(TokenType.KEYWORD, "and")){//Da -> Dr ( ’and’ Dr )+
             readNT();
             procDR();
             treesToPop++;
@@ -431,7 +438,7 @@ public class Parser {
 
     private void procDR() throws IOException{
 
-        if (isCurrentToken(TokenType.KEYWORD, "rec")){
+        if (isCurrentToken(TokenType.KEYWORD, "rec")){ //Dr -> ’rec’ Db
 
             readNT();
             procDB();
@@ -439,7 +446,7 @@ public class Parser {
             buildASTNode(ASTNodeType.REC, 1);
         }
         else{
-            procDB();
+            procDB();//Dr -> Db ;
         }
     }
 
@@ -447,12 +454,12 @@ public class Parser {
 
     private void procDB() throws IOException{
 
-        if (isCurrentTokenType(TokenType.L_PAREN)){
+        if (isCurrentTokenType(TokenType.L_PAREN)){//Db -> ’(’ D ’)’ ;
             procD();
             readNT();
         
             if (!isCurrentTokenType(TokenType.R_PAREN)){
-                //throw new ParseException("DB: expected ')'");
+                
                 System.out.println("Parse Exception7");
             }
         
@@ -460,7 +467,7 @@ public class Parser {
         }
         
         
-        else if (isCurrentTokenType(TokenType.IDENTIFIER)){
+        else if (isCurrentTokenType(TokenType.IDENTIFIER)){//Db -> ’<IDENTIFIER>’ Vb+ ’=’ E
             
             readNT();
             if (isCurrentToken(TokenType.OPERATOR, ",")){
@@ -468,7 +475,7 @@ public class Parser {
                 procVL();
 
                 if (!isCurrentToken(TokenType.OPERATOR,"=")){
-                    //throw new ParseException("DB expeted '='")
+                    
                     System.out.println("Parse Exception8");
                 }
                 buildASTNode(ASTNodeType.COMMA, 2);
@@ -476,7 +483,7 @@ public class Parser {
                 procE();
                 buildASTNode(ASTNodeType.EQUAL, 2);
             }
-            else{
+            else{ //Db -> Vl ’=’ E
                 if (isCurrentToken(TokenType.OPERATOR, "=")){
                     readNT();
                     procE();
@@ -508,19 +515,19 @@ public class Parser {
 
 
     private void procVB() throws IOException{
-        if (isCurrentTokenType(TokenType.IDENTIFIER)){
+        if (isCurrentTokenType(TokenType.IDENTIFIER)){//Vb -> ’<IDENTIFIER>’
             readNT();
         }
-        else if(isCurrentTokenType(TokenType.L_PAREN)){
+        else if(isCurrentTokenType(TokenType.L_PAREN)){ //Vb -> ’(’ ’)’
             readNT();
             if (isCurrentTokenType(TokenType.R_PAREN)){
                 createTerminalASTNode(ASTNodeType.PARAN, "");
                 readNT();
             }
-            else{
+            else{ //Vb -> ’(’ Vl ’)’
                 procVL();
                 if(!isCurrentTokenType(TokenType.R_PAREN)){
-                    // throw new ParseException("VB: ')' expected");
+                    
                     System.out.println("Parse Exception11");
                 }
                 readNT();
@@ -528,18 +535,18 @@ public class Parser {
         }
     }
 
-    private void procVL() throws IOException{
+    private void procVL() throws IOException{//
         if(!isCurrentTokenType(TokenType.IDENTIFIER)){
-            // throw new ParseException("VL: Identifier Expected");
+            
             System.out.println("Parse Exception12");
         }
         else{
             readNT();
             int treesToPop = 0;
-            while( isCurrentToken(TokenType.COMMA, ",")){
+            while( isCurrentToken(TokenType.COMMA, ",")){//Vl -> ’<IDENTIFIER>’ list ’,’
                 readNT();
                 if(!isCurrentTokenType(TokenType.IDENTIFIER)){
-                    // throw new ParseException("VL: Identifier Expected");
+                    
                     System.out.println("Parse Exception13");
                 }
                 readNT();
@@ -551,12 +558,10 @@ public class Parser {
         }
     }
 
-    // public void printAST(){
-    //     printAST(stack.pop());
-    // }
+    
 
     public void printAST(ASTNode ast){
-        // ASTNode ast  = stack.pop();
+        
         if (ast.getValue() == null) System.out.println(ast.getName());
         else System.out.println(ast.getValue());
         

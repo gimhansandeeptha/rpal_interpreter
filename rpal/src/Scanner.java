@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+/*
+ * Both Lexer and Screener are contains in Scaner
+ */
 public class Scanner {
     private BufferedReader buffer;
     private String extraChar;
@@ -19,6 +23,10 @@ public class Scanner {
         lineNumber =1;
     }
 
+    /*
+     * Read the next token from input file
+     * If reached end of file return null
+     */
     public Token readNextToken() throws IOException{
         Token nextToken = null;
         String nextChar;
@@ -59,6 +67,10 @@ public class Scanner {
         return c;
     }
 
+    /*
+     * Create the next token
+     * return the token that was created
+     */
     private Token buildToken(String c) throws IOException{  
         Token nextToken = null;
         if (RegEx.LetterRegex.matcher(c).matches()) nextToken = identifierToken(c);
@@ -73,6 +85,11 @@ public class Scanner {
     }
 
 
+    /*
+     * Create identifier tokens
+     * Identifier -> Letter (Letter | Digit | '_')
+     * return the identifier token that was created
+     */
     private Token identifierToken(String c) throws IOException{
         Token identifier = new Token();
         identifier.setTokenType(TokenType.IDENTIFIER);
@@ -92,6 +109,11 @@ public class Scanner {
         return identifier;
     }
 
+    /*
+     * Create integer tokens
+     * Integer -> Digit+
+     * return integer token that was created
+     */
     private Token integerToken(String c) throws IOException{
         Token integer = new Token();
         integer.setTokenType(TokenType.INTEGER);
@@ -108,6 +130,11 @@ public class Scanner {
         return integer;
     }
 
+    /*
+     * Create operator tokens
+     * Operator ->  Operator_symbol+
+     * return operator token that was created
+     */
     private Token operatorToken(String c) throws IOException{
         Token operator = new Token();
         operator.setTokenType(TokenType.OPERATOR);
@@ -124,6 +151,11 @@ public class Scanner {
         return operator;
     }
 
+    /*
+     * Create string tokens
+     * String -> '''' ('\' 't' | '\' 'n' | '\' '\' | '\' '''' |'(' | ')' | ';' | ',' |'' |Letter | Digit | Operator_symbol )* ''''
+     * return string token that was created
+     */
     private Token stringToken(String c) throws IOException{
         Token string  = new Token();
         string.setTokenType(TokenType.STRING);
@@ -144,13 +176,12 @@ public class Scanner {
         return string;
     }
 
+    /*
+     * Create space tokens
+     * return space token that was created
+     */
     private Token spaceToken(String c) throws IOException{
         Token space = new Token();
-
-        // char ch = c.charAt(0);
-        // int unicodeValue = Character.codePointAt(c, 0);
-        // System.out.println("'" + ch + "': " + unicodeValue);
-
         space.setTokenType(TokenType.DELETE);
         space.setTokenLine(lineNumber);
         StringBuilder stringBuilder = new StringBuilder(c);
@@ -167,6 +198,10 @@ public class Scanner {
         return space;
     }
 
+    /*
+     * Create comment tokens
+     * return comment token that was created
+     */
     private Token commentToken(String c) throws IOException{
         Token comment = new Token();
         comment.setTokenType(TokenType.DELETE);
@@ -183,6 +218,10 @@ public class Scanner {
         return comment;
     }
 
+    /*
+     * Create punctuation tokens
+     * return punctuation token that was created
+     */
     private Token punctionToken(String c) throws IOException {
         Token punction = new Token();
         punction.setTokenType(TokenType.PUNCTION);

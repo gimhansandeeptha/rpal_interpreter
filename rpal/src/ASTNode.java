@@ -1,3 +1,6 @@
+/*
+ * AST node First-child, next-sibling tree representation
+ */
 
 public class ASTNode{
     private ASTNodeType type;
