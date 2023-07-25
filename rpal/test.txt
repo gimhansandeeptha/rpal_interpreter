@@ -1,5 +1,13 @@
-let rec Fib m n T x y = (x+y) gr n -> T |((x+y) ls m -> Fib m n T y (x+y) | Fib m n (T aug (x+y)) y (x+y)) 
-in 
-let func m n = m eq 0 -> (n eq 0 -> (nil aug 0) | (Fib m n (0,1) 0 1)) | m eq 1 -> (Fib m n (nil aug 1) 0 1) | (Fib m n nil 0 1)
+let rec length I = I eq 0 -> 0 | 1 + length(I/10)
 in
-Print(func 0 100)
+let rec length I = I eq 0 -> 0 | 1 + length(I/10)
+in
+let Equl(n,len) = n/(10**(len-1)) eq n-(n/10)*10 -> true | false
+in
+let rec Pal(n,len) = len le 1 -> true
+                    | Equl(n,len) -> Pal((n/10)-((n/10)/10**(len-2))*10**(len-2),len-2) 
+                    | false
+in
+let rec F(stt,end,T) = end ls stt -> T | ( Pal(stt,length(stt)) -> F(stt+1,end,T aug stt)| F(stt+1,end,T))
+in
+Print(F (100, 200, nil))

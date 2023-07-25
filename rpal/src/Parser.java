@@ -384,6 +384,9 @@ public class Parser {
         else if(isCurrentToken(TokenType.KEYWORD, "false")){
             createTerminalASTNode(ASTNodeType.FALSE, "false");
         }
+        else if(isCurrentToken(TokenType.KEYWORD, "nil")){ 
+            createTerminalASTNode(ASTNodeType.NIL, "nil");
+    }
         else if(isCurrentTokenType(TokenType.L_PAREN)){
             readNT();
             procE();
