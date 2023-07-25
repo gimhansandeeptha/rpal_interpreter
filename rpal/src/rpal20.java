@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
-public class P {
+public class rpal20 {
 
   public static String fileName;
 
