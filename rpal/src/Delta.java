@@ -4,36 +4,36 @@ import java.util.Stack;
 
 
 public class Delta extends ASTNode{
-  private List<String> boundVars;
-  private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
+  private List<String> boundVariables;
+  private Environment linkedEnvironments; 
   private Stack<ASTNode> body;
   private int index;
   
   public Delta(){
     setType(ASTNodeType.DELTA);
-    boundVars = new ArrayList<String>();
+    boundVariables = new ArrayList<String>();
   }
   
   public Delta accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+    return nodeCopier.copyDelta(this);
   }
   
-  //used if the program evaluation results in a partial application
+  
   @Override
   public String getValue(){
-    return "[lambda closure: "+boundVars.get(0)+": "+index+"]";
+    return "[lambda closure: "+boundVariables.get(0)+": "+index+"]";
   }
 
-  public List<String> getBoundVars(){
-    return boundVars;
+  public List<String> getboundVariables(){
+    return boundVariables;
   }
   
-  public void addBoundVars(String boundVar){
-    boundVars.add(boundVar);
+  public void addboundVariables(String boundVar){
+    boundVariables.add(boundVar);
   }
   
-  public void setBoundVars(List<String> boundVars){
-    this.boundVars = boundVars;
+  public void setboundVariables(List<String> boundVariables){
+    this.boundVariables = boundVariables;
   }
   
   public Stack<ASTNode> getBody(){
@@ -52,11 +52,11 @@ public class Delta extends ASTNode{
     this.index = index;
   }
 
-  public Environment getLinkedEnv(){
-    return linkedEnv;
+  public Environment getlinkedEnvironments(){
+    return linkedEnvironments;
   }
 
-  public void setLinkedEnv(Environment linkedEnv){
-    this.linkedEnv = linkedEnv;
+  public void setlinkedEnvironments(Environment linkedEnvironments){
+    this.linkedEnvironments = linkedEnvironments;
   }
 }

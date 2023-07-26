@@ -81,7 +81,7 @@ public class rpal20 {
 
   private static void evaluateST(AST ast){
     CSEMachine csem = new CSEMachine(ast);
-    csem.evaluateProgram();
+    csem.evalProgram();
     System.out.println();
   }
 

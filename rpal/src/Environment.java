@@ -3,31 +3,28 @@ import java.util.Map;
 
 public class Environment{
   private Environment parent;
-  private Map<String, ASTNode> nameValueMap;
+  private Map<String, ASTNode> mapNameValue;
   
   public Environment(){
-    nameValueMap = new HashMap<String, ASTNode>();
+    mapNameValue = new HashMap<String, ASTNode>();
   }
 
-  public Environment getParent(){
+  public Environment get_Parent(){
     return parent;
   }
 
-  public void setParent(Environment parent){
+  public void set_Parent(Environment parent){
     this.parent = parent;
   }
   
-  /**
-   * Tries to find the binding of the given key in the mappings of this Environment's
-   * inheritance hierarchy, starting with the Environment this method is invoked on.
-   * 
-   * @param key key the mapping of which to find
-   * @return ASTNode that corresponds to the mapping of the key passed in as an argument
-   *         or null if no mapping was found
+  /*
+   * Find the binding of the given key
+   * return ASTNode that corresponds to the key passed in as an argument
+   * return null if no mapping was found
    */
   public ASTNode lookup(String key){
     ASTNode retValue = null;
-    Map<String, ASTNode> map = nameValueMap;
+    Map<String, ASTNode> map = mapNameValue;
     
     retValue = map.get(key);
     
@@ -40,7 +37,7 @@ public class Environment{
       return null;
   }
   
-  public void addMapping(String key, ASTNode value){
-    nameValueMap.put(key, value);
+  public void add_Mapping(String key, ASTNode value){
+    mapNameValue.put(key, value);
   }
 }

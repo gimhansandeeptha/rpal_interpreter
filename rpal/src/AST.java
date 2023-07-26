@@ -258,10 +258,10 @@ public class AST {
                 ASTNode comma = node.getChild();
                 ASTNode variableNode = comma.getChild();
                 while(variableNode != null){
-                    delta.addBoundVars(variableNode.getValue());
+                    delta.addboundVariables(variableNode.getValue());
                     variableNode = variableNode.getSibling();
                 }
-            } else delta.addBoundVars(node.getChild().getValue());
+            } else delta.addboundVariables(node.getChild().getValue());
             
             body.push(delta);
             return;
@@ -273,8 +273,8 @@ public class AST {
             ASTNode elseNode = thenNode.getSibling();
 
             Beta newBeta = new Beta();
-            buildDeltaBody( thenNode, newBeta.getThenBody());
-            buildDeltaBody( elseNode, newBeta.getElseBody());
+            buildDeltaBody( thenNode, newBeta.get_Then_Body());
+            buildDeltaBody( elseNode, newBeta.get_Else_Body());
 
             body.push(newBeta);
             buildDeltaBody( condition, body);

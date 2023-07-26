@@ -1,3 +1,4 @@
+//Represents the fixed-point resulting from the application
 public class Eta extends ASTNode{
   private Delta delta;
   
@@ -5,17 +6,17 @@ public class Eta extends ASTNode{
     setType(ASTNodeType.ETA);
   }
   
-  //used if the program evaluation results in a partial application
+
   @Override
   public String getValue(){
-    return "[eta closure: "+delta.getBoundVars().get(0)+": "+delta.getIndex()+"]";
+    return "[eta closure: "+delta.getboundVariables().get(0)+": "+delta.getIndex()+"]";
   }
   
   public Eta accept(NodeCopier nodeCopier){
-    return nodeCopier.copy(this);
+    return nodeCopier.copyEta(this);
   }
 
-  public Delta getDelta(){
+  public Delta get_Delta(){
     return delta;
   }
 

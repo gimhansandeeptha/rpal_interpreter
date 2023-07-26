@@ -2,10 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
+/*
+ * Make copies of nodes on value stack
+ */
 public class NodeCopier{
   
-  public ASTNode copy(ASTNode astNode){
+  public ASTNode copyASTNode(ASTNode astNode){
     ASTNode copy = new ASTNode();
     if(astNode.getChild()!=null)
       copy.setChild(astNode.getChild().accept(this));
@@ -17,7 +19,7 @@ public class NodeCopier{
     return copy;
   }
   
-  public Beta copy(Beta beta){
+  public Beta copyBeta(Beta beta){
     Beta copy = new Beta();
     if(beta.getChild()!=null)
       copy.setChild(beta.getChild().accept(this));
@@ -28,21 +30,21 @@ public class NodeCopier{
     copy.setSourceLine(beta.getSourceLine());
     
     Stack<ASTNode> thenBodyCopy = new Stack<ASTNode>();
-    for(ASTNode thenBodyElement: beta.getThenBody()){
+    for(ASTNode thenBodyElement: beta.get_Then_Body()){
       thenBodyCopy.add(thenBodyElement.accept(this));
     }
-    copy.setThenBody(thenBodyCopy);
+    copy.set_Then_Body(thenBodyCopy);
     
     Stack<ASTNode> elseBodyCopy = new Stack<ASTNode>();
-    for(ASTNode elseBodyElement: beta.getElseBody()){
+    for(ASTNode elseBodyElement: beta.get_Else_Body()){
       elseBodyCopy.add(elseBodyElement.accept(this));
     }
-    copy.setElseBody(elseBodyCopy);
+    copy.set_Else_Body(elseBodyCopy);
     
     return copy;
   }
   
-  public Eta copy(Eta eta){
+  public Eta copyEta(Eta eta){
     Eta copy = new Eta();
     if(eta.getChild()!=null)
       copy.setChild(eta.getChild().accept(this));
@@ -52,12 +54,12 @@ public class NodeCopier{
     copy.setValue(eta.getValue());
     copy.setSourceLine(eta.getSourceLine());
     
-    copy.setDelta(eta.getDelta().accept(this));
+    copy.setDelta(eta.get_Delta().accept(this));
     
     return copy;
   }
   
-  public Delta copy(Delta delta){
+  public Delta copyDelta(Delta delta){
     Delta copy = new Delta();
     if(delta.getChild()!=null)
       copy.setChild(delta.getChild().accept(this));
@@ -75,15 +77,15 @@ public class NodeCopier{
     copy.setBody(bodyCopy);
     
     List<String> boundVarsCopy = new ArrayList<String>();
-    boundVarsCopy.addAll(delta.getBoundVars());
-    copy.setBoundVars(boundVarsCopy);
+    boundVarsCopy.addAll(delta.getboundVariables());
+    copy.setboundVariables(boundVarsCopy);
     
-    copy.setLinkedEnv(delta.getLinkedEnv());
+    copy.setlinkedEnvironments(delta.getlinkedEnvironments());
     
     return copy;
   }
   
-  public Tuple copy(Tuple tuple){
+  public Tuple copyTuple(Tuple tuple){
     Tuple copy = new Tuple();
     if(tuple.getChild()!=null)
       copy.setChild(tuple.getChild().accept(this));

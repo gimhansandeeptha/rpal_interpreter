@@ -48,7 +48,7 @@ public class ASTNode{
     }
 
     public ASTNode accept(NodeCopier nodeCopier){
-        return nodeCopier.copy(this);
+        return nodeCopier.copyASTNode(this);
       }
 
     public int getSourceLine(){
