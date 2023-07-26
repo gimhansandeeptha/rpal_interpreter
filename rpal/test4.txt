@@ -1,0 +1,6 @@
+( Print (X, Sqr X,
+X * Sqr X, Sqr X ** 2) where Sqr X = 
+X**2
+)
+where
+X = 3
