@@ -1,17 +1,30 @@
-# Compiler and flags
-JAVAC = javac
-JFLAGS = -d bin -sourcepath src -cp bin
+# Define the Java compiler and flags
+JC = javac
+JFLAGS = -d bin -sourcepath src
 
-# List of Java source files
-SOURCES := $(wildcard src/*.java)
+# Define the source directory
+SRCDIR = src
 
-# Targets
-all: bin/rpal20.class
+# Find all .java files in the source directory
+SOURCES := $(wildcard $(SRCDIR)/*.java)
 
-bin/rpal20.class: $(SOURCES)
-	$(JAVAC) $(JFLAGS) $(SOURCES)
+# Convert .java files to .class files in the bin directory
+CLASSES := $(SOURCES:$(SRCDIR)/%.java=bin/%.class)
 
+# Default target - compile the Java classes
+all: $(CLASSES)
+
+# Rule for compiling .java files to .class files
+bin/%.class: $(SRCDIR)/%.java
+	$(JC) $(JFLAGS) $<
+
+# Rule to run the Java program
+run: $(CLASSES)
+	java -cp bin rpal20
+
+# Clean the bin directory
 clean:
-	rm -rf bin/*
+	rm -rf bin
 
-.PHONY: all clean
+# PHONY targets to prevent conflicts with filenames
+.PHONY: all run clean

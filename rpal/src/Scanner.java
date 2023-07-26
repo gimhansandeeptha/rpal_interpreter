@@ -78,8 +78,9 @@ public class Scanner {
         else if (RegEx.PunctionRegex.matcher(c).matches()) nextToken = punctionToken(c);
         else if (RegEx.OperatorRegex.matcher(c).matches()) nextToken = operatorToken(c);
         else if (RegEx.SpacesRegex.matcher(c).matches()) nextToken = spaceToken(c);  
-        else if (c.equals("\\")) nextToken = commentToken(c);
+        
         else if (c.equals("\'")) nextToken = stringToken(c);
+        else if (c.equals("\\")) nextToken = commentToken(c);
 
         return nextToken;
     }
@@ -141,6 +142,9 @@ public class Scanner {
         operator.setTokenLine(lineNumber);
         StringBuilder stringBuilder = new StringBuilder(c);
         String nextChar = readNextChar();
+
+        if(c.equals("/") && nextChar.equals("/"))
+            return commentToken(c+nextChar);
 
         while(RegEx.OperatorRegex.matcher(nextChar).matches()){
             stringBuilder.append(nextChar);

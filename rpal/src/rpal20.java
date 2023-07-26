@@ -10,12 +10,13 @@ public class rpal20 {
 
   public static String fileName;
 
+
   public static void main(String[] args){
     boolean listFlag = false;
     boolean astFlag = false;
     boolean stFlag = false;
     boolean noOutFlag = false;
-    fileName = "C:\\Users\\ladca\\OneDrive\\Documents\\GitHub\\rpal_interpreter\\rpal\\test.txt";
+    fileName = "D:\\Gimhan Sandeeptha\\Gimhan\\Semester 04\\Programming Languages\\PL Group Project - 12\\rpal_interpreter\\rpal\\test.txt";
     AST ast = null;
     
     for(String cmdOption: args){

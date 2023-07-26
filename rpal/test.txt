@@ -1,2 +1,3 @@
-let rec sum_n_numbers n = n eq 0 -> 0 | n eq 1 -> 1 | (n + sum_n_numbers(n-1))
-in print(sum_n_numbers 10)
+let X=3 // Prints (3,9)
+in
+Print(X,X**2)
